@@ -1,5 +1,5 @@
 {
-  "name": "@twentyfourg-express-sdk/sample",
+  "name": "@twentyfourg-express-sdk/package",
   "version": "1.0.0-alpha.0",
   "description": "",
   "main": "./src/index.js",
@@ -11,6 +11,6 @@
   "license": "UNLICENSED",
   "repository": {
     "url": "https://github.com/twentyfourg/express-sdk",
-    "directory": "packages/sample"
+    "directory": "packages/package"
   }
 }
