@@ -1,0 +1,37 @@
+name: Release
+on:
+  push:
+    branches:
+      - master
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: Authenticate with NPM
+        run: |
+          echo "@twentyfourg-express-sdk:registry=https://registry.npmjs.org" > .npmrc
+          echo "registry=https://registry.npmjs.org" >> .npmrc
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> .npmrc
+          npm config set access public --global
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EMAIL: ${{ github.event.head_commit.author.email }}
+          NAME: ${{ github.event.head_commit.author.name }}
+        run: |
+          git config --global user.email "$EMAIL"
+          git config --global user.name "$NAME"
+          npx lerna version --conventional-commits --conventional-graduate --create-release github --yes
+          lerna publish from-git --yes
+          
