@@ -14,9 +14,8 @@ const validOrigins = apexDomain
   ? [new RegExp(`/${FRONTEND_URL}/g`), new RegExp(`.${apexDomain}$`)]
   : [];
 
-if (!apexDomain) console.warn('CORS: process.env.FRONTEND_URL not found');
-
 module.exports = (req, callback) => {
+  if (!apexDomain) console.warn('CORS: process.env.FRONTEND_URL not found');
   const isLocal =
     env('local', 'dev', 'qa') && req.get('origin') && req.get('origin').includes('localhost');
   const origin =
