@@ -1,6 +1,6 @@
 {
   "name": "@twentyfourg-express-sdk/core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@twentyfourg-express-sdk/cors": "^1.0.1",
-    "@twentyfourg-express-sdk/rate-limit": "^1.0.0",
+    "@twentyfourg-express-sdk/rate-limit": "^1.0.1",
     "dotenv": "^16.0.0"
   }
 }
