@@ -1,6 +1,8 @@
 const sdk = require('@twentyfourg/cloud-sdk');
 const { nanoid } = require('nanoid');
 
+const { DYNAMO_RATE_LIMIT_TABLE } = process.env;
+
 const calculateNextResetTime = (windowMs) => {
   const resetTime = new Date();
   resetTime.setMilliseconds(resetTime.getMilliseconds() + windowMs);
@@ -11,7 +13,7 @@ module.exports = class DynamoStore {
   constructor() {
     this.enabled = true;
     this.uuid = nanoid(5);
-    this.dynamo = sdk.cache.dynamo({ tableName: 'rate-limit' });
+    this.dynamo = sdk.cache.dynamo({ tableName: DYNAMO_RATE_LIMIT_TABLE || 'rate-limit' });
   }
 
   // must be synchronous
