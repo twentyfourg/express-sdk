@@ -6,14 +6,13 @@ module.exports = (opts = {}) => {
     minutes: 1,
     max: 15,
     standardHeaders: true,
-    path: null,
     message: { error: 'too many requests, please try again later' },
   };
-  const { minutes, path, ...options } = { ...defaults, ...opts };
+  const { minutes, ...options } = { ...defaults, ...opts };
 
   return rateLimit({
     windowMs: minutes * 60 * 1000,
     ...options,
-    store: new DynamoStore({ path }),
+    store: new DynamoStore(),
   });
 };

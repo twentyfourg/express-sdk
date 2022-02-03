@@ -1,4 +1,5 @@
 const sdk = require('@twentyfourg/cloud-sdk');
+const { nanoid } = require('nanoid');
 
 const calculateNextResetTime = (windowMs) => {
   const resetTime = new Date();
@@ -7,9 +8,9 @@ const calculateNextResetTime = (windowMs) => {
 };
 
 module.exports = class DynamoStore {
-  constructor(options) {
+  constructor() {
     this.enabled = true;
-    this.path = options?.path ? `${options.path}:` : '';
+    this.uuid = nanoid(5);
     this.dynamo = sdk.cache.dynamo({ tableName: 'rate-limit' });
   }
 
@@ -30,8 +31,8 @@ module.exports = class DynamoStore {
 
   async increment(key) {
     const totalHits =
-      ((await this.commit(this.dynamo.get.bind(this.dynamo, this.path + key))) ?? 0) + 1;
-    await this.commit(this.dynamo.set.bind(this.dynamo, this.path + key, totalHits));
+      ((await this.commit(this.dynamo.get.bind(this.dynamo, this.uuid + key))) ?? 0) + 1;
+    await this.commit(this.dynamo.set.bind(this.dynamo, this.uuid + key, totalHits));
 
     return {
       totalHits,
@@ -40,17 +41,17 @@ module.exports = class DynamoStore {
   }
 
   async decrement(key) {
-    const current = await this.commit(this.dynamo.get.bind(this.dynamo, this.path + key));
+    const current = await this.commit(this.dynamo.get.bind(this.dynamo, this.uuid + key));
     if (current)
-      await this.commit(this.dynamo.set.bind(this.dynamo, (this.path + key, current - 1)));
+      await this.commit(this.dynamo.set.bind(this.dynamo, (this.uuid + key, current - 1)));
   }
 
   async resetKey(key) {
-    await this.commit(this.dynamo.delete.bind(this.dynamo, this.path + key));
+    await this.commit(this.dynamo.delete.bind(this.dynamo, this.uuid + key));
   }
 
   async resetAll() {
-    await this.commit(this.dynamo.deleteByPattern.bind(this.dynamo, `${this.path}*`));
+    await this.commit(this.dynamo.deleteByPattern.bind(this.dynamo, '*'));
     this.resetTime = calculateNextResetTime(this.windowMs);
   }
 

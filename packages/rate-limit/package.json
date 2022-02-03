@@ -11,7 +11,8 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@twentyfourg/cloud-sdk": "^1.18.1",
-    "express-rate-limit": "^6.2.0"
+    "express-rate-limit": "^6.2.0",
+    "nanoid": "^3.2.0"
   },
   "repository": {
     "url": "https://github.com/twentyfourg/express-sdk",
