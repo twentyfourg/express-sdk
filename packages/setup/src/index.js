@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const simpleGit = require('simple-git');
 const yaml = require('js-yaml');
