@@ -73,7 +73,7 @@ module.exports.setup = async () => {
     );
   }
 
-  const replacements = (await replace({ dry: true, ...replacementOptions }))
+  const replacements = (await replace({ dry: false, ...replacementOptions }))
     .filter((obj) => obj.hasChanged)
     .map((obj) => obj.file);
 
