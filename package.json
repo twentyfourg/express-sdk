@@ -7,7 +7,8 @@
     "create-package": "node ./.develop/scripts/create-package",
     "lint:eslint": "eslint --fix",
     "lint:prettier": "prettier --write --loglevel warn",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "setup-test": "node ./packages/setup"
   },
   "repository": "https://github.com/twentyfourg/express-sdk",
   "keywords": [],
@@ -36,6 +37,7 @@
   },
   "dependencies": {
     "@twentyfourg/cloud-sdk": "^1.18.3",
+    "enquirer": "^2.3.6",
     "fs-extra": "^10.0.0"
   }
 }

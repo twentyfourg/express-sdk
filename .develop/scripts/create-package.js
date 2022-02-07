@@ -1,11 +1,17 @@
 require('@twentyfourg/cloud-sdk').logger();
 const fs = require('fs-extra');
+const { prompt } = require('enquirer');
 
 const NPM_ORG = '@twentyfourg-express-sdk';
 const files = ['package.json', 'README.md'];
 
 (async () => {
-  const [project] = process.argv.slice(2);
+  const project = await prompt({
+    type: 'input',
+    name: 'project',
+    message: 'What is the project name?',
+  }).then((data) => data.project);
+
   const templatePath = './.develop/package';
   const packagePath = `./packages/${project}`;
 
