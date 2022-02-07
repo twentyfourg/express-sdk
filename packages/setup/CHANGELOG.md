@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.1](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/setup@1.0.0...@twentyfourg-express-sdk/setup@1.0.1) (2022-02-07)
+
+
+### Bug Fixes
+
+* make executable ([c20b524](https://github.com/twentyfourg/express-sdk/commit/c20b52490b84b4c9564557798c23df47fb5d3698))
+
+
+
+
+
 # 1.0.0 (2022-02-07)
 
 
