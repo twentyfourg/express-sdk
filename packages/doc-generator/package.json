@@ -1,0 +1,26 @@
+{
+  "name": "@twentyfourg-express-sdk/doc-generator",
+  "version": "1.0.0-alpha.0",
+  "description": "",
+  "main": "./src/index.js",
+  "bin": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "repository": {
+    "url": "https://github.com/twentyfourg/express-sdk",
+    "directory": "packages/doc-generator"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "enquirer": "^2.3.6",
+    "express-list-endpoints": "^6.0.0",
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "express": "^4.17.3"
+  }
+}
