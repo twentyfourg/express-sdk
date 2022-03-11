@@ -112,7 +112,7 @@ const run = async () => {
   });
 
   const dryRun = await new Toggle({
-    message: `Generate the following docs ${generate.join('\n')}?`,
+    message: `Generate the following docs: ${`${generate.join(', ')}?`}`,
     enabled: 'Yes',
     disabled: 'No',
     initial: 'Yes',
