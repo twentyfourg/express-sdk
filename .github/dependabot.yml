@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: release
+    versioning-strategy: increase
+    schedule:
+      interval: daily
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: build
+      include: scope
+    allow:
+      - dependency-type: production

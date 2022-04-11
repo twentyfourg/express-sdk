@@ -32,6 +32,6 @@ jobs:
         run: |
           git config --global user.email "$EMAIL"
           git config --global user.name "$NAME"
+          npm install --no-save conventional-changelog-conventionalcommits
           npx lerna version --conventional-commits --conventional-graduate --create-release github --yes
           lerna publish from-git --yes
-          
