@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+### [1.0.3](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/setup@1.0.2...@twentyfourg-express-sdk/setup@1.0.3) (2022-04-11)
+
+
+### Build
+
+* **deps:** bump simple-git from 3.1.1 to 3.6.0 ([735be25](https://github.com/twentyfourg/express-sdk/commit/735be256025bf70ec8de6768a612d09d04138091))
+
+
+
 ## [1.0.2](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/setup@1.0.1...@twentyfourg-express-sdk/setup@1.0.2) (2022-02-07)
 
 
