@@ -12,7 +12,7 @@
   "dependencies": {
     "@twentyfourg/cloud-sdk": "^1.25.1",
     "express-rate-limit": "^6.3.0",
-    "nanoid": "^3.2.0"
+    "nanoid": "^3.3.3"
   },
   "repository": {
     "url": "https://github.com/twentyfourg/express-sdk",
