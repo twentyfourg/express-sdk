@@ -3,9 +3,9 @@ updates:
   - package-ecosystem: npm
     directory: /
     target-branch: release
-    versioning-strategy: increase
+    versioning-strategy: increase-if-necessary
     schedule:
-      interval: daily
+      interval: weekly
     open-pull-requests-limit: 10
     commit-message:
       prefix: build
