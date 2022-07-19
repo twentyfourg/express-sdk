@@ -36,7 +36,7 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
-    "@twentyfourg/cloud-sdk": "^1.25.1",
+    "@twentyfourg/cloud-sdk": "^1.27.0",
     "enquirer": "^2.3.6",
     "fs-extra": "^10.0.1"
   }
