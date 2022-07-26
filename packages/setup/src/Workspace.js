@@ -15,7 +15,7 @@ class Workspace {
     this.jobNumber = spec.jobNumber;
     this.services = spec.services || [];
     this.secretPath = spec.secretPath;
-    this.cwd = path.basename(path.resolve(process.cwd()));
+    this.cwd = process.env.INIT_CWD;
   }
 
   async init() {
@@ -35,7 +35,7 @@ class Workspace {
         type: 'text',
         name: 'name',
         message: 'Name of the project?',
-        initial: this.name || this.cwd,
+        initial: this.name || path.basename(this.cwd),
       })
     ).name;
 
@@ -89,10 +89,7 @@ class Workspace {
           message: 'Vault path of the project?',
           initial:
             this.secretPath ||
-            `/kv/${this.jobNumber}/dev/backend-infrastructure-secrets,
-            /kv/${this.jobNumber}/dev/backend-secrets,
-            /kv/${this.jobNumber}/dev/cloudfront-keys,
-            /kv/${this.jobNumber}/dev/mysql/${this.developerEmail}`,
+            `/kv/${this.jobNumber}/dev/backend-infrastructure-secrets,/kv/${this.jobNumber}/dev/backend-secrets,/kv/${this.jobNumber}/dev/cloudfront-keys,/kv/${this.jobNumber}/dev/mysql/${this.developerEmail}`,
         },
       ])
     ).secretPath;
