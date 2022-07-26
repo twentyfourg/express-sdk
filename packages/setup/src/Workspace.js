@@ -15,7 +15,6 @@ class Workspace {
     this.jobNumber = spec.jobNumber;
     this.services = spec.services || [];
     this.secretPath = spec.secretPath;
-    this.cwd = process.env.INIT_CWD;
   }
 
   async init() {
@@ -35,7 +34,7 @@ class Workspace {
         type: 'text',
         name: 'name',
         message: 'Name of the project?',
-        initial: this.name || path.basename(this.cwd),
+        initial: this.name || path.basename(process.env.INIT_CWD),
       })
     ).name;
 

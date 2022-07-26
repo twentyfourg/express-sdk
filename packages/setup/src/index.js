@@ -1,20 +1,15 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const path = require('path');
 const Workspace = require('./Workspace');
 
 (async () => {
   try {
     let workspace;
     // Check if workspace spec currently exists;
-    if (fs.existsSync(path.resolve(process.env.INIT_CWD, './.develop/workspace.spec.json'))) {
+    if (fs.existsSync('./.develop/workspace.spec.json')) {
       workspace = new Workspace(
-        JSON.parse(
-          fs
-            .readFileSync(path.resolve(process.env.INIT_CWD, './.develop/workspace.spec.json'))
-            .toString()
-        )
+        JSON.parse(fs.readFileSync('./.develop/workspace.spec.json').toString())
       );
     } else {
       workspace = new Workspace();
