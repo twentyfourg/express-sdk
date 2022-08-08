@@ -2,3 +2,6 @@ node_modules
 .DS_Store
 .env
 packages/doc-generator/.develop/docs
+.develop/mysql
+.develop/workspace.spec.json
+docker-compose.yml
