@@ -1,60 +1,40 @@
 const sdk = require('@twentyfourg/cloud-sdk');
-const { nanoid } = require('nanoid');
 
 const { DYNAMO_RATE_LIMIT_TABLE } = process.env;
-
-const calculateNextResetTime = (windowMs) => {
-  const resetTime = new Date();
-  resetTime.setMilliseconds(resetTime.getMilliseconds() + windowMs);
-  return resetTime;
-};
 
 module.exports = class DynamoStore {
   constructor() {
     this.enabled = true;
-    this.uuid = nanoid(5);
     this.dynamo = sdk.cache.dynamo({ tableName: DYNAMO_RATE_LIMIT_TABLE || 'rate-limit' });
   }
 
   // must be synchronous
   init(options) {
+    this.max = options.max;
     this.windowMs = options.windowMs;
-    this.resetTime = calculateNextResetTime(this.windowMs);
-
-    (async () => this.resetAll())();
-
-    const interval = setInterval(async () => {
-      await this.resetAll();
-    }, this.windowMs);
-    if (interval.unref) {
-      interval.unref();
-    }
+    this.resetTime = this.calculateNextResetTime();
   }
 
   async increment(key) {
-    const totalHits =
-      ((await this.commit(this.dynamo.get.bind(this.dynamo, this.uuid + key))) ?? 0) + 1;
-    await this.commit(this.dynamo.set.bind(this.dynamo, this.uuid + key, totalHits));
-
-    return {
-      totalHits,
-      resetTime: this.resetTime,
-    };
+    const { count, resetTime } = await this.getKey(key);
+    const totalHits = count + 1;
+    await this.updateKey(key, { count: totalHits, resetTime });
+    return { totalHits, resetTime };
   }
 
   async decrement(key) {
-    const current = await this.commit(this.dynamo.get.bind(this.dynamo, this.uuid + key));
-    if (current)
-      await this.commit(this.dynamo.set.bind(this.dynamo, (this.uuid + key, current - 1)));
+    const { count, resetTime } = await this.getKey(key);
+    const totalHits = count - 1;
+    await this.updateKey(key, { count: totalHits, resetTime });
   }
 
   async resetKey(key) {
-    await this.commit(this.dynamo.delete.bind(this.dynamo, this.uuid + key));
+    await this.commit(this.dynamo.delete.bind(this.dynamo, key));
   }
 
   async resetAll() {
     await this.commit(this.dynamo.deleteByPattern.bind(this.dynamo, '*'));
-    this.resetTime = calculateNextResetTime(this.windowMs);
+    this.resetTime = this.calculateNextResetTime();
   }
 
   async commit(callback) {
@@ -65,5 +45,25 @@ module.exports = class DynamoStore {
         this.enabled = false;
         console.error(error);
       });
+  }
+
+  async getKey(key) {
+    const data = await this.commit(this.dynamo.get.bind(this.dynamo, key));
+    const output = data || {};
+    if (!data?.count) output.count = 0;
+    if (!data?.resetTime) output.resetTime = this.calculateNextResetTime();
+    else output.resetTime = new Date(data.resetTime);
+    return output;
+  }
+
+  async updateKey(key, data) {
+    const ttl = (data.resetTime.getTime() - new Date().getTime()) / 1000;
+    await this.commit(this.dynamo.set.bind(this.dynamo, key, data, { ttl }));
+  }
+
+  calculateNextResetTime() {
+    const resetTime = new Date();
+    resetTime.setMilliseconds(resetTime.getMilliseconds() + this.windowMs);
+    return resetTime;
   }
 };

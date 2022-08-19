@@ -10,9 +10,9 @@
   "author": "",
   "license": "UNLICENSED",
   "dependencies": {
-    "@twentyfourg/cloud-sdk": "^1.25.1",
-    "express-rate-limit": "^6.3.0",
-    "nanoid": "^3.2.0"
+    "@twentyfourg/cloud-sdk": "^2.0.1",
+    "express-rate-limit": "^6.5.1",
+    "lodash": "^4.17.21"
   },
   "repository": {
     "url": "https://github.com/twentyfourg/express-sdk",
