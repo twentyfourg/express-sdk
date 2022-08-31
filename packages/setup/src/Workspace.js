@@ -220,7 +220,7 @@ class Workspace {
     if (this.services?.includes('mysql')) composeV3.services.mysql = mySQLService;
     if (this.services?.includes('dynamo')) composeV3.services.dynamo = dynamoService;
     if (this.services?.includes('ezq')) composeV3.services.ezq = ezqService;
-    if (this.services?.includes('mysql')) composeV3.services.sqs = sqsService;
+    if (this.services?.includes('sqs')) composeV3.services.sqs = sqsService;
 
     await Workspace.safePrint('./docker-compose.yml', yaml.dump(composeV3));
   }
