@@ -87,8 +87,9 @@ class Workspace {
           name: 'secretPath',
           message: 'Vault path of the project?',
           initial:
-            this.secretPath ||
-            `/kv/${this.jobNumber}/dev/backend-infrastructure-secrets,/kv/${this.jobNumber}/dev/backend-secrets,/kv/${this.jobNumber}/dev/cloudfront-keys,/kv/${this.jobNumber}/dev/mysql/${this.developerEmail}`,
+            this.secretPath || this.name === 'express-template'
+              ? '/kv/express-template/dev/backend-secrets,/kv/express-template/dev/backend-infrastructure-secrets'
+              : `/kv/${this.jobNumber}/dev/backend-infrastructure-secrets,/kv/${this.jobNumber}/dev/backend-secrets,/kv/${this.jobNumber}/dev/cloudfront-keys,/kv/${this.jobNumber}/dev/mysql/${this.developerEmail}`,
         },
       ])
     ).secretPath;
