@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.5](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/setup@1.0.4...@twentyfourg-express-sdk/setup@1.0.5) (2022-08-31)
+
+
+### Bug Fixes
+
+* write sqs service only when selected ([7f16da9](https://github.com/twentyfourg/express-sdk/commit/7f16da955dbd75adda10a3e11c8873b31424c483))
+
+
+
 ## [1.0.4](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/setup@1.0.3...@twentyfourg-express-sdk/setup@1.0.4) (2022-08-08)
 
 **Note:** Version bump only for package @twentyfourg-express-sdk/setup
