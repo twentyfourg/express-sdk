@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/setup@1.0.6...@twentyfourg-express-sdk/setup@1.1.0) (2022-09-06)
+
+
+### Features
+
+* write out additional files on selection and catch prompt exits ([0bb8840](https://github.com/twentyfourg/express-sdk/commit/0bb8840eb240f459478a58c74eb23e212050c89f))
+
+
+
 ## [1.0.6](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/setup@1.0.5...@twentyfourg-express-sdk/setup@1.0.6) (2022-08-31)
 
 **Note:** Version bump only for package @twentyfourg-express-sdk/setup
