@@ -20,7 +20,9 @@ const Workspace = require('./Workspace');
     workspace.printSpec();
     await workspace.printDotEnv();
     await workspace.printSQL();
-    await workspace.printDockerComposev3();
+    await workspace.printWaitFor();
+    await workspace.printEntrypoint();
+    await workspace.printDockerComposeV3();
   } catch (error) {
     console.error(error);
   }

@@ -7,6 +7,8 @@ const path = require('path');
 const os = require('os');
 const { default: axios } = require('axios');
 
+const promptCancelled = () => process.exit();
+
 class Workspace {
   constructor(spec = {}) {
     this.name = spec.name;
@@ -30,68 +32,77 @@ class Workspace {
     } catch (error) {}
 
     this.name = (
-      await prompts({
-        type: 'text',
-        name: 'name',
-        message: 'Name of the project?',
-        initial: this.name || path.basename(process.env.INIT_CWD),
-      })
+      await prompts(
+        {
+          type: 'text',
+          name: 'name',
+          message: 'Name of the project?',
+          initial: this.name || path.basename(process.env.INIT_CWD),
+        },
+        { onCancel: promptCancelled }
+      )
     ).name;
 
-    const { developerEmail, jobNumber, jobName, services } = await prompts([
-      {
-        type: 'text',
-        name: 'developerEmail',
-        message: "What's your 24G email?",
-        initial: this.developerEmail,
-      },
-      {
-        type: 'text',
-        name: 'jobNumber',
-        message: '24G job number of the project?',
-        initial: this.jobNumber || Workspace.regex(this.name, /\d+-\d/g),
-      },
-      {
-        type: 'text',
-        name: 'jobName',
-        message: '24G job name of the project?',
-        initial: this.jobName || Workspace.regex(this.name, /(?:\d+-\d-)(.+)/, 1),
-      },
-      {
-        type: 'multiselect',
-        name: 'services',
-        message: 'Pick what services you would like to run locally with Docker Compose.',
-        choices: [
-          // TODO
-          { title: 'MySQL', value: 'mysql', selected: this.services?.includes('mysql') },
-          {
-            title: 'DynamoDB (Cache/Rate Limit Table)',
-            value: 'dynamo',
-            selected: this.services?.includes('dynamo'),
-          },
-          { title: 'API', value: 'api', selected: this.services?.includes('api') },
-          { title: 'SQS', value: 'sqs', selected: this.services?.includes('sqs') },
-          { title: 'EZQ', value: 'ezq', selected: this.services?.includes('ezq') },
-        ],
-      },
-    ]);
+    const { developerEmail, jobNumber, jobName, services } = await prompts(
+      [
+        {
+          type: 'text',
+          name: 'developerEmail',
+          message: "What's your 24G email?",
+          initial: this.developerEmail,
+        },
+        {
+          type: 'text',
+          name: 'jobNumber',
+          message: '24G job number of the project?',
+          initial: this.jobNumber || Workspace.regex(this.name, /\d+-\d/g),
+        },
+        {
+          type: 'text',
+          name: 'jobName',
+          message: '24G job name of the project?',
+          initial: this.jobName || Workspace.regex(this.name, /(?:\d+-\d-)(.+)/, 1),
+        },
+        {
+          type: 'multiselect',
+          name: 'services',
+          message: 'Pick what services you would like to run locally with Docker Compose.',
+          choices: [
+            // TODO
+            { title: 'MySQL', value: 'mysql', selected: this.services?.includes('mysql') },
+            {
+              title: 'DynamoDB (Cache/Rate Limit Table)',
+              value: 'dynamo',
+              selected: this.services?.includes('dynamo'),
+            },
+            { title: 'API', value: 'api', selected: this.services?.includes('api') },
+            { title: 'SQS', value: 'sqs', selected: this.services?.includes('sqs') },
+            { title: 'EZQ', value: 'ezq', selected: this.services?.includes('ezq') },
+          ],
+        },
+      ],
+      { onCancel: promptCancelled }
+    );
     this.developerEmail = developerEmail;
     this.jobNumber = jobNumber;
     this.jobName = jobName;
     this.services = services;
 
     this.secretPath = (
-      await prompts([
-        {
-          type: 'text',
-          name: 'secretPath',
-          message: 'Vault path of the project?',
-          initial:
-            this.secretPath || this.name === 'express-template'
-              ? '/kv/express-template/dev/backend-secrets,/kv/express-template/dev/backend-infrastructure-secrets'
-              : `/kv/${this.jobNumber}/dev/backend-infrastructure-secrets,/kv/${this.jobNumber}/dev/backend-secrets,/kv/${this.jobNumber}/dev/cloudfront-keys,/kv/${this.jobNumber}/dev/mysql/${this.developerEmail}`,
-        },
-      ])
+      await prompts(
+        [
+          {
+            type: 'text',
+            name: 'secretPath',
+            message: 'Vault path of the project?',
+            initial:
+              this.secretPath || this.name === 'express-template'
+                ? '/kv/express-template/dev/backend-secrets,/kv/express-template/dev/backend-infrastructure-secrets'
+                : `/kv/${this.jobNumber}/dev/backend-infrastructure-secrets,/kv/${this.jobNumber}/dev/backend-secrets,/kv/${this.jobNumber}/dev/cloudfront-keys,/kv/${this.jobNumber}/dev/mysql/${this.developerEmail}`,
+          },
+        ],
+        { onCancel: promptCancelled }
+      )
     ).secretPath;
   }
 
@@ -101,11 +112,7 @@ class Workspace {
   }
 
   async printDotEnv() {
-    const dotEnv = {
-      SECRET_PATH: this.secretPath,
-      ENV: 'local',
-      NODE_ENV: 'local',
-    };
+    const dotEnv = { SECRET_PATH: this.secretPath, ENV: 'local', NODE_ENV: 'local' };
 
     // Set all MySQL env vars if MySQL is a service in the workspace
     if (this.services?.includes('mysql')) {
@@ -141,7 +148,7 @@ class Workspace {
     await Workspace.safePrint('./.env', Workspace.objectToEnv(dotEnv));
   }
 
-  async printDockerComposev3() {
+  async printDockerComposeV3() {
     const composeV3 = {
       version: '3',
       services: {},
@@ -227,13 +234,33 @@ class Workspace {
   }
 
   async printSQL() {
-    const sqlStatment = `CREATE DATABASE IF NOT EXISTS \`${this.name.replace('-', '_')}\`;
+    if (!this.services?.includes('mysql')) return;
 
-CREATE USER 'root'@'%' IDENTIFIED BY '';
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';`;
+    const sqlStatement = `CREATE DATABASE IF NOT EXISTS \`${this.name.replace(
+      '-',
+      '_'
+    )}\`;\n\nCREATE USER 'root'@'%' IDENTIFIED BY '';\nGRANT ALL PRIVILEGES ON *.* TO 'root'@'%';`;
 
     fs.mkdirSync('./.develop/mysql', { recursive: true });
-    await Workspace.safePrint('./.develop/mysql/1-setup.sql', sqlStatment);
+    await Workspace.safePrint('./.develop/mysql/1-setup.sql', sqlStatement);
+  }
+
+  async printWaitFor() {
+    if (this.services?.includes('mysql'))
+      await Workspace.safePrint(
+        './.develop/mysql/wait-for-mysql.sh',
+        `echo "Wait for SQL server (${this.name}-mysql:3306) to actually be available...";\nwhile ! echo exit | nc $containerName"-mysql" 3306 &>/dev/null; do echo "..."; sleep 5; done\necho "SQL server responded to ping!"`
+      );
+  }
+
+  async printEntrypoint() {
+    if (!this.services?.includes('api')) return;
+    let waitFor = '';
+    if (this.services?.includes('api')) waitFor += 'sh .develop/docker/wait-for-mysql.sh\n';
+    await Workspace.safePrint(
+      './.develop/dev.entrypoint.sh',
+      `#!/bin/sh\n${waitFor}npm install --ignore-scripts --silent\nnpm run migrations\nnpm run seeds\nnpm run local`
+    );
   }
 
   static objectToEnv(envContent) {
@@ -269,16 +296,19 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';`;
     try {
       if (fs.existsSync(file)) {
         if (content === fs.readFileSync(file).toString()) return;
-        const { doNext } = await prompts({
-          type: 'select',
-          name: 'doNext',
-          message: `There is already a file at ${file}, how would you like to proceed?`,
-          choices: [
-            { title: 'Truncate file', value: 'truncate' },
-            { title: 'Append to the file the updated version', value: 'append' },
-            { title: 'Keep current version as is', value: 'keep' },
-          ],
-        });
+        const { doNext } = await prompts(
+          {
+            type: 'select',
+            name: 'doNext',
+            message: `There is already a file at ${file}, how would you like to proceed?`,
+            choices: [
+              { title: 'Truncate file', value: 'truncate' },
+              { title: 'Append to the file the updated version', value: 'append' },
+              { title: 'Keep current version as is', value: 'keep' },
+            ],
+          },
+          { onCancel: promptCancelled }
+        );
 
         if (doNext === 'keep') return;
 
