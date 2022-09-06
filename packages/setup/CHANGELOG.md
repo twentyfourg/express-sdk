@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/setup@1.1.0...@twentyfourg-express-sdk/setup@1.1.1) (2022-09-06)
+
+
+### Bug Fixes
+
+* make shell files executable ([2e844a8](https://github.com/twentyfourg/express-sdk/commit/2e844a8425ada9f2fe2613cfb10f8ea8c31f603b))
+
+
+
 ## [1.1.0](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/setup@1.0.6...@twentyfourg-express-sdk/setup@1.1.0) (2022-09-06)
 
 
