@@ -246,11 +246,13 @@ class Workspace {
   }
 
   async printWaitFor() {
-    if (this.services?.includes('mysql'))
+    if (this.services?.includes('mysql')) {
       await Workspace.safePrint(
         './.develop/mysql/wait-for-mysql.sh',
         `echo "Wait for SQL server (${this.name}-mysql:3306) to actually be available...";\nwhile ! echo exit | nc $containerName"-mysql" 3306 &>/dev/null; do echo "..."; sleep 5; done\necho "SQL server responded to ping!"`
       );
+      fs.chmodSync('./.develop/mysql/wait-for-mysql.sh', '755');
+    }
   }
 
   async printEntrypoint() {
@@ -261,6 +263,7 @@ class Workspace {
       './.develop/dev.entrypoint.sh',
       `#!/bin/sh\n${waitFor}npm install --ignore-scripts --silent\nnpm run migrations\nnpm run seeds\nnpm run local`
     );
+    fs.chmodSync('./.develop/dev.entrypoint.sh', '755');
   }
 
   static objectToEnv(envContent) {
