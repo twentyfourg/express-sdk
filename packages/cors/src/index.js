@@ -1,4 +1,4 @@
-const { FRONTEND_URL } = process.env;
+const { FRONTEND_URL, SDK_CORS_ORIGINS } = process.env;
 const env = (...args) =>
   [...args].includes(process.env.ENV) || [...args].includes(process.env.NODE_ENV);
 
@@ -11,7 +11,13 @@ const apexDomain =
     : false;
 
 const validOrigins = apexDomain
-  ? [new RegExp(`/${FRONTEND_URL}/g`), new RegExp(`.${apexDomain}$`)]
+  ? [new RegExp(`^${FRONTEND_URL}$`), new RegExp(`.${apexDomain}$`)]
+  : [];
+
+const sdkOrigins = SDK_CORS_ORIGINS
+  ? SDK_CORS_ORIGINS.replace(/\s/g, '')
+      .split(',')
+      .map((origin) => new RegExp(`^${origin}$`))
   : [];
 
 module.exports = (req, callback) => {
@@ -19,7 +25,9 @@ module.exports = (req, callback) => {
   const isLocal =
     env('local', 'dev', 'qa') && req.get('origin') && req.get('origin').includes('localhost');
   const origin =
-    validOrigins.some((regex) => regex.test(req.get('origin'))) || isLocal
+    (sdkOrigins.length ? sdkOrigins : validOrigins).some((regex) =>
+      regex.test(req.get('origin'))
+    ) || isLocal
       ? req.get('origin')
       : false;
   callback(null, { origin, credentials: true });
