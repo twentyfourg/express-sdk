@@ -13,13 +13,13 @@ const apexDomain =
     : false;
 
 const validOrigins = apexDomain
-  ? [new RegExp(RegexEscape(`^${FRONTEND_URL}$`)), new RegExp(RegexEscape(`.${apexDomain}$`))]
+  ? [new RegExp(`^${RegexEscape(FRONTEND_URL)}$`), new RegExp(`.*\.${RegexEscape(apexDomain)}$`)]
   : [];
 
 const sdkOrigins = SDK_CORS_ORIGINS
   ? SDK_CORS_ORIGINS.replace(/\s/g, '')
       .split(',')
-      .map((origin) => new RegExp(RegexEscape(`^${origin}$`)))
+      .map((origin) => new RegExp(`^${RegexEscape(origin)}$`))
   : [];
 
 module.exports = (req, callback) => {
