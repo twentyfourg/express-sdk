@@ -12,5 +12,8 @@
   "repository": {
     "url": "https://github.com/twentyfourg/express-sdk",
     "directory": "packages/cors"
+  },
+  "dependencies": {
+    "regex-escape": "^3.4.10"
   }
 }
