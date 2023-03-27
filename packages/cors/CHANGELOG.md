@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.2](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/cors@1.1.1...@twentyfourg-express-sdk/cors@1.1.2) (2023-03-27)
+
+### Bug Fixes
+
+- only preg escape the url characters ([#68](https://github.com/twentyfourg/express-sdk/issues/68)) ([9c63b6f](https://github.com/twentyfourg/express-sdk/commit/9c63b6f834e463921c79fef1dcf9f594650398d9))
+
 ## [1.1.1](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/cors@1.1.0...@twentyfourg-express-sdk/cors@1.1.1) (2023-03-27)
 
 ### Bug Fixes

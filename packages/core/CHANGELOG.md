@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.8](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/core@1.0.7...@twentyfourg-express-sdk/core@1.0.8) (2023-03-27)
+
+**Note:** Version bump only for package @twentyfourg-express-sdk/core
+
 ## [1.0.7](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/core@1.0.6...@twentyfourg-express-sdk/core@1.0.7) (2023-03-27)
 
 **Note:** Version bump only for package @twentyfourg-express-sdk/core
