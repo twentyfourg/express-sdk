@@ -1,3 +1,5 @@
+const RegexEscape = require('regex-escape');
+
 const { FRONTEND_URL, SDK_CORS_ORIGINS } = process.env;
 const env = (...args) =>
   [...args].includes(process.env.ENV) || [...args].includes(process.env.NODE_ENV);
@@ -11,13 +13,13 @@ const apexDomain =
     : false;
 
 const validOrigins = apexDomain
-  ? [new RegExp(`^${FRONTEND_URL}$`), new RegExp(`.${apexDomain}$`)]
+  ? [new RegExp(RegexEscape(`^${FRONTEND_URL}$`)), new RegExp(RegexEscape(`.${apexDomain}$`))]
   : [];
 
 const sdkOrigins = SDK_CORS_ORIGINS
   ? SDK_CORS_ORIGINS.replace(/\s/g, '')
       .split(',')
-      .map((origin) => new RegExp(`^${origin}$`))
+      .map((origin) => new RegExp(RegexEscape(`^${origin}$`)))
   : [];
 
 module.exports = (req, callback) => {
