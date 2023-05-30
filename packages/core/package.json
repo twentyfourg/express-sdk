@@ -16,6 +16,6 @@
   "dependencies": {
     "@twentyfourg-express-sdk/cors": "^1.0.1",
     "@twentyfourg-express-sdk/rate-limit": "^1.0.2",
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.1.0"
   }
 }
