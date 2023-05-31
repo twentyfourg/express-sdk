@@ -15,7 +15,7 @@
     "directory": "packages/doc-generator"
   },
   "dependencies": {
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.1.2",
     "enquirer": "^2.3.6",
     "express-list-endpoints": "^6.0.0",
     "js-yaml": "^4.1.0"
