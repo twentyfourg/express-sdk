@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@twentyfourg/cloud-sdk": "^1.25.1",
-    "enquirer": "^2.3.6",
+    "enquirer": "^2.4.0",
     "fs-extra": "^10.0.1"
   }
 }
