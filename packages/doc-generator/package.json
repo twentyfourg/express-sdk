@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "dotenv": "^16.0.0",
-    "enquirer": "^2.3.6",
+    "enquirer": "^2.4.1",
     "express-list-endpoints": "^6.0.0",
     "js-yaml": "^4.1.0"
   },
