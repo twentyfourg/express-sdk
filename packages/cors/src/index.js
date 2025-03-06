@@ -1,6 +1,6 @@
 const RegexEscape = require('regex-escape');
 
-const { FRONTEND_URL, SDK_CORS_ORIGINS } = process.env;
+const { FRONTEND_URL, SDK_CORS_ORIGINS, SDK_CORS_WILDCARD_ORIGINS } = process.env;
 const env = (...args) =>
   [...args].includes(process.env.ENV) || [...args].includes(process.env.NODE_ENV);
 
@@ -22,6 +22,38 @@ const validOrigins = apexDomain
       /* eslint-disable no-useless-escape */
       new RegExp(`.*\.${RegexEscape(apexDomain)}$`), // Match any subdomain of the apex domain
     ]
+  : [];
+
+// Helper function to convert pattern to regex
+const patternToRegex = (pattern) => {
+  // Escape the pattern but keep the * as-is
+  const escapedPattern = pattern.split('*').map(RegexEscape).join('.*');
+  return new RegExp(`^${escapedPattern}$`);
+};
+
+// Process SDK_CORS_WILDCARD_ORIGINS to create patterns for allowed domains
+const prefixOrigins = SDK_CORS_WILDCARD_ORIGINS
+  ? SDK_CORS_WILDCARD_ORIGINS.split(',')
+      .map((prefix) => prefix.trim())
+      .filter((prefix) => prefix.includes('*')) // Only process patterns with wildcards
+      .reduce((acc, prefix) => {
+        // Extract the protocol and domain parts
+        const match = prefix.match(/^(https?:\/\/)?(.+)/);
+        if (!match) return acc;
+
+        const protocol = match[1] || 'https://';
+        const domainPattern = match[2];
+
+        // Add the original pattern
+        acc.push(patternToRegex(protocol + domainPattern));
+
+        // If the pattern doesn't start with www., add a www. version
+        if (!domainPattern.startsWith('www.')) {
+          acc.push(patternToRegex(`${protocol}www.${domainPattern}`));
+        }
+
+        return acc;
+      }, [])
   : [];
 
 // Process SDK_CORS_ORIGINS to allow specific origins and their 'www' subdomains
@@ -56,18 +88,16 @@ module.exports = (req, callback) => {
     hasWarnedFrontendUrl = true;
   }
 
-  // Determine if the request is from a local environment
-  const isLocal =
-    env('local', 'dev', 'qa') && req.get('origin') && req.get('origin').includes('localhost');
+  const requestOrigin = req.get('origin');
+  const isLocal = env('local', 'dev', 'qa') && requestOrigin && requestOrigin.includes('localhost');
 
-  // Check if the request's origin matches any of the valid or SDK origins, or is local
+  // Check if the request's origin matches any of our patterns
   const origin =
-    (sdkOrigins.length ? sdkOrigins : validOrigins).some((regex) =>
-      regex.test(req.get('origin'))
+    [...prefixOrigins, ...(sdkOrigins.length ? sdkOrigins : validOrigins)].some((regex) =>
+      regex.test(requestOrigin)
     ) || isLocal
-      ? req.get('origin') // Allow the origin if it matches
-      : false; // Disallow the origin if no match is found
+      ? requestOrigin
+      : false;
 
-  // Complete the callback with the decision on the origin and credentials flag
   callback(null, { origin, credentials: true });
 };
