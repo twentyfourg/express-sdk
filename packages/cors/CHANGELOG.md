@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.0](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/cors@1.1.2...@twentyfourg-express-sdk/cors@1.2.0) (2025-03-06)
+
+### Features
+
+- **cors:** support wildcard pattern ([4c33705](https://github.com/twentyfourg/express-sdk/commit/4c33705108bfee69c99339642ea8427d96d2e029))
+
+### Bug Fixes
+
+- **cors:** include www for sdk origins ([dfdbf18](https://github.com/twentyfourg/express-sdk/commit/dfdbf1801d31de30196c01858e03afe464c32e2e))
+
 ## [1.1.2](https://github.com/twentyfourg/express-sdk/compare/@twentyfourg-express-sdk/cors@1.1.1...@twentyfourg-express-sdk/cors@1.1.2) (2023-03-27)
 
 ### Bug Fixes
