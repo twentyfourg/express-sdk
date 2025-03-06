@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - master
+permissions:
+  contents: write
 jobs:
   release:
     name: Release
@@ -15,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 16
+          node-version: 18
       - name: Authenticate with NPM
         run: |
           echo "@twentyfourg-express-sdk:registry=https://registry.npmjs.org" > .npmrc
@@ -32,6 +34,6 @@ jobs:
         run: |
           git config --global user.email "$EMAIL"
           git config --global user.name "$NAME"
-          npm install --no-save conventional-changelog-conventionalcommits
+          npm install --no-save conventional-changelog-conventionalcommits@7
           npx lerna version --conventional-commits --conventional-graduate --create-release github --yes
           lerna publish from-git --yes
