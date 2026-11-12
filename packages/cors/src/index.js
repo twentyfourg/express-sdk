@@ -12,15 +12,15 @@ const apexDomain =
   (FRONTEND_URL?.match(/\./g) || []).length > 1
     ? FRONTEND_URL.split('.').slice(-2).join('.') // Extract the last two segments if multiple subdomains exist
     : FRONTEND_URL // Use the FRONTEND_URL directly if it's a simple domain or a single subdomain
-    ? FRONTEND_URL.replace(/(^\w+:|^)\/\//, '') // Remove protocol from FRONTEND_URL
-    : false; // Fallback to false if FRONTEND_URL is not defined
+      ? FRONTEND_URL.replace(/(^\w+:|^)\/\//, '') // Remove protocol from FRONTEND_URL
+      : false; // Fallback to false if FRONTEND_URL is not defined
 
 // Construct the list of valid origins based on the apex domain
 const validOrigins = apexDomain
   ? [
       new RegExp(`^${RegexEscape(FRONTEND_URL)}$`), // Exact match for FRONTEND_URL
-      /* eslint-disable no-useless-escape */
-      new RegExp(`.*\.${RegexEscape(apexDomain)}$`), // Match any subdomain of the apex domain
+      // Escape the dot. In a template literal `\.` is `.`, so `xaisc.org` matched an `aisc.org` apex.
+      new RegExp(`^.*\\.${RegexEscape(apexDomain)}$`), // Match any subdomain of the apex domain
     ]
   : [];
 
@@ -80,6 +80,15 @@ const sdkOrigins = SDK_CORS_ORIGINS
       }, [])
   : [];
 
+// includes('localhost') matched hosts like localhost.attacker.example. Require the hostname.
+const isLocalhostOrigin = (origin) => {
+  try {
+    return new URL(origin).hostname === 'localhost';
+  } catch (err) {
+    return false;
+  }
+};
+
 // Middleware function to handle CORS requests
 module.exports = (req, callback) => {
   // Check if FRONTEND_URL is not set and warning has not been logged yet
@@ -89,7 +98,7 @@ module.exports = (req, callback) => {
   }
 
   const requestOrigin = req.get('origin');
-  const isLocal = env('local', 'dev', 'qa') && requestOrigin && requestOrigin.includes('localhost');
+  const isLocal = env('local', 'dev', 'qa') && isLocalhostOrigin(requestOrigin);
 
   // Check if the request's origin matches any of our patterns
   const origin =
